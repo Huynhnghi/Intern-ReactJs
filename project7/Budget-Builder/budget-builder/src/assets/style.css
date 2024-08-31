@@ -1,0 +1,27 @@
+.budget-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.budget-table th,
+.budget-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.budget-table th {
+    background-color: #f4f4f4;
+}
+
+.context-menu {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.sub-item {
+    background-color: #f9f9f9;
+}
