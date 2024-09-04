@@ -3,7 +3,6 @@ import Table from './Table';
 import { initialData } from './data'; // Import dữ liệu từ file data.js
 import './assets/style.css';
 
-// Danh sách các tháng trong năm
 const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -12,9 +11,8 @@ const months = [
 const App = () => {
     const [startMonth, setStartMonth] = useState(initialData.startMonth);
     const [endMonth, setEndMonth] = useState(initialData.endMonth);
-    const [data, setData] = useState({ startMonth, endMonth, items: [] });
+    const [data, setData] = useState(initialData); // Initialized with initialData
 
-    // Hàm để lấy các tháng trong khoảng thời gian đã chọn
     const getMonthsInRange = useCallback((start, end) => {
         const startIndex = months.indexOf(start);
         const endIndex = months.indexOf(end);
@@ -26,7 +24,6 @@ const App = () => {
         return months.slice(startIndex, endIndex + 1);
     }, []);
 
-    // Hàm để tạo dữ liệu dựa trên các tháng đã chọn
     const generateData = useCallback(() => {
         const monthsInRange = getMonthsInRange(startMonth, endMonth);
 
@@ -43,25 +40,18 @@ const App = () => {
         return { startMonth, endMonth, items: updatedItems };
     }, [startMonth, endMonth, getMonthsInRange]);
 
-    // Cập nhật dữ liệu khi tháng bắt đầu hoặc tháng kết thúc thay đổi
     useEffect(() => {
         setData(generateData());
     }, [startMonth, endMonth, generateData]);
 
-    // Hàm để xử lý khi có thay đổi trong ô
     const handleCellChange = (path, month, value) => {
         setData(prevData => {
             const items = [...prevData.items];
-            const item = items[path[0]];
-            const key = months[path[1]];
-
-            item.values[key] = value;
-
-            if (item.children) {
-                item.children.forEach(child => {
-                    child.values[key] = value;
-                });
+            let item = items[path[0]];
+            for (let i = 1; i < path.length; i++) {
+                item = item.children[path[i]];
             }
+            item.values[month] = value;
 
             return { ...prevData, items };
         });
